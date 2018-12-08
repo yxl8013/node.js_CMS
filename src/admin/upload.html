@@ -1,0 +1,49 @@
+ <!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<script src="./lib/jquery.min.js"></script>
+	</head>
+	<body>
+		<form enctype="multipart/form-data" method="post">
+			<input type="file" name='image' id="imagelist">
+			
+		</form>
+		<button onclick="Req_ajax()"> 上传</button><br>
+		<img src="" width="100px",height="100px">
+		<p id="status"></p>
+	<script>
+		var OL_Action_Root = "http://127.0.0.1:3000";
+	function Req_ajax()
+	{           
+	    var formData = new FormData()
+	    formData.append("img",$("#imagelist")[0].files[0])    
+	    $.ajax({
+	        url: OL_Action_Root+'/upload/img',
+	        type: 'POST',
+	        data: formData,
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        success: function(data){
+	            var res = data;
+	            console.log(res);
+	            if(res.err==0)
+	            {
+	                $('img').prop('src',OL_Action_Root+res.data);
+	            }
+	            else
+	            {
+	                document.getElementById("status").innerHTML = "<span style='color:#EF0000'>文件上传失败！<br>原因是："+res.msg+"</span>";
+	            }
+	        },
+	        error: function(jqXHR, textStatus, errorThrown){
+	            document.getElementById("status").innerHTML = "<span style='color:#EF0000'>连接不到服务器，请检查网络！</span>";
+	        }
+	    });
+	}
+ 
+	</script>
+	</body>
+	</html>
